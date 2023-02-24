@@ -9,7 +9,7 @@ pub struct ConsolidatedRecord {
 
 fn convert_to_i32(s: &String) -> i32 {
     return match s.parse::<i32>() {
-        Err(e) => 0,
+        Err(_e) => 0,
         Ok(n) => n,
     };
 }
