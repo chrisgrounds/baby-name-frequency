@@ -26,7 +26,6 @@ fn main() {
                         Ok(csv_data) => {
                             let consolidated_record: ConsolidatedRecord =
                                 consolidated_record::calculate(&csv_data);
-                            println!("{:?}", csv_data);
                             println!("{:?}", consolidated_record);
                         }
                     }
