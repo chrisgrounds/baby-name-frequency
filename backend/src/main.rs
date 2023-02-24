@@ -6,7 +6,7 @@ use crate::consolidated_record::ConsolidatedRecord;
 mod consolidated_record;
 mod csv_data;
 
-fn main() {
+fn run() {
     let file_path = String::from("./data/girls_baby_names_1996_2021.csv");
     let query = "Auri";
     let rdr = csv::ReaderBuilder::new().from_path(file_path);
@@ -35,4 +35,8 @@ fn main() {
             println!("Found baby name within {:?}", start_query_time.elapsed());
         }
     }
+}
+
+fn main() {
+    run();
 }
