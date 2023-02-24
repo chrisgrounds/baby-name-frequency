@@ -6,9 +6,8 @@ use crate::consolidated_record::ConsolidatedRecord;
 mod consolidated_record;
 mod csv_data;
 
-fn run() {
-    let file_path = String::from("./data/girls_baby_names_1996_2021.csv");
-    let query = "Auri";
+fn run(name: String, gender: String) {
+    let file_path = format!("./data/{}_baby_names_1996_2021.csv", gender);
     let rdr = csv::ReaderBuilder::new().from_path(file_path);
 
     match rdr {
@@ -18,7 +17,7 @@ fn run() {
 
             for record in file.records() {
                 let row = record.unwrap();
-                if row.iter().any(|field| field == query) {
+                if row.iter().any(|field| field == name) {
                     let baby_name_record: Result<csv_data::CsvData, Error> = row.deserialize(None);
 
                     match baby_name_record {
@@ -38,5 +37,5 @@ fn run() {
 }
 
 fn main() {
-    run();
+    run(String::from("Auri"), String::from("girls"));
 }
