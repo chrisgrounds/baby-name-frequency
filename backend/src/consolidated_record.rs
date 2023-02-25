@@ -5,6 +5,7 @@ pub struct ConsolidatedRecord {
     name: String,
     avg_rank: i32,
     total_count: i32,
+    avg_count_year: f32,
 }
 
 fn convert_to_i32(s: &String, default_value: i32) -> i32 {
@@ -82,5 +83,6 @@ pub fn calculate(csv_data: &CsvData) -> ConsolidatedRecord {
         name: csv_data.name.clone(),
         avg_rank: total_rank / all_ranks.len() as i32,
         total_count: total,
+        avg_count_year: total as f32 / 26.0,
     };
 }
