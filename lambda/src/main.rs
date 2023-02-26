@@ -16,8 +16,6 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
         Some(name) => match gender_param {
             None => Err("Missing query param 'name' or 'gender'".into()),
             Some(gender) => {
-                println!("Gender is {}", gender);
-
                 let config = aws_config::from_env().region("eu-west-1").load().await;
                 let filename = &format!("{}_baby_names_1996_2021.csv", gender.to_string());
 
@@ -45,12 +43,13 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
                         if let Ok(csv_data) = baby_name_record {
                             let consolidated_record: ConsolidatedRecord =
                                 consolidated_record::calculate(&csv_data);
-                            println!("{:?}", consolidated_record);
+
+                            let json_data = serde_json::to_string(&consolidated_record)?;
 
                             let resp: Response<Body> = Response::builder()
                                 .status(200)
-                                .header("content-type", "text/html")
-                                .body(format!("{}", consolidated_record.total_count).into())
+                                .header("content-type", "application/json")
+                                .body(json_data.into())
                                 .map_err(Box::new)?;
 
                             return Ok::<Response<Body>, Error>(resp);
@@ -58,7 +57,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
                     };
                 }
 
-                return Err("Uh oh".into());
+                return Err("No records found".into());
             }
         },
     }
@@ -68,9 +67,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
 async fn main() -> Result<(), Error> {
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::INFO)
-        // disable printing the name of the module in every log line.
         .with_target(false)
-        // disabling time is handy because CloudWatch will add the ingestion time.
         .without_time()
         .init();
 

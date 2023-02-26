@@ -1,6 +1,9 @@
+// use lambda_http::Body;
+use serde::Serialize;
+
 use crate::csv_data::CsvData;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct ConsolidatedRecord {
     pub name: String,
     pub avg_rank: i32,
