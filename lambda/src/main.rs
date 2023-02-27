@@ -63,7 +63,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
                 };
             }
 
-            return Err("No records found".into());
+            return send_response(500, "{'error': 'No records found'}".to_string());
         }
     }
 }
