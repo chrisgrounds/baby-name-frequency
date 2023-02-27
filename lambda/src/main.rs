@@ -23,7 +23,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
     let path_params = event.query_string_parameters();
     let name_param: Option<&str> = path_params.first("name");
 
-    let gender = Gender::read_gender(&path_params);
+    let gender = Gender::read_gender_or_default_to_girl(&path_params);
 
     match name_param {
         None => send_response(500, "{'error': 'Missing query param name'}".to_string()),

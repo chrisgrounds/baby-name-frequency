@@ -6,7 +6,7 @@ pub enum Gender {
 }
 
 impl Gender {
-    pub fn read_gender(path_params: &QueryMap) -> Self {
+    pub fn read_gender_or_default_to_girl(path_params: &QueryMap) -> Self {
         let gender_param: Option<&str> = path_params.first("gender");
 
         match gender_param {
