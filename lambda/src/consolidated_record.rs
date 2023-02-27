@@ -9,6 +9,7 @@ pub struct ConsolidatedRecord {
     pub avg_rank: i32,
     pub total_count: i32,
     pub avg_count_year: f32,
+    pub total_count_as_percentage: f32,
 }
 
 fn convert_to_i32(s: &String, default_value: i32) -> i32 {
@@ -18,7 +19,7 @@ fn convert_to_i32(s: &String, default_value: i32) -> i32 {
     };
 }
 
-pub fn calculate(csv_data: &CsvData) -> ConsolidatedRecord {
+pub fn calculate(csv_data: &CsvData, gender: &str) -> ConsolidatedRecord {
     let total = [
         convert_to_i32(&csv_data.count2021, 0),
         convert_to_i32(&csv_data.count2020, 0),
@@ -82,10 +83,17 @@ pub fn calculate(csv_data: &CsvData) -> ConsolidatedRecord {
 
     let total_rank: i32 = all_ranks.iter().sum();
 
+    let all_counts = if gender == "boys" {
+        8258200.0
+    } else {
+        7660371.0
+    };
+
     return ConsolidatedRecord {
         name: csv_data.name.clone(),
         avg_rank: total_rank / all_ranks.len() as i32,
         total_count: total,
         avg_count_year: total as f32 / 26.0,
+        total_count_as_percentage: (total as f32 / all_counts) * 100.0,
     };
 }

@@ -42,7 +42,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
 
                         if let Ok(csv_data) = baby_name_record {
                             let consolidated_record: ConsolidatedRecord =
-                                consolidated_record::calculate(&csv_data);
+                                consolidated_record::calculate(&csv_data, gender);
 
                             let json_data = serde_json::to_string(&consolidated_record)?;
 
