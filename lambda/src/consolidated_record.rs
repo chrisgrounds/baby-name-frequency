@@ -13,10 +13,7 @@ pub struct ConsolidatedRecord {
 }
 
 fn convert_to_i32(s: &String, default_value: i32) -> i32 {
-    return match s.parse::<i32>() {
-        Err(_e) => default_value,
-        Ok(n) => n,
-    };
+    s.parse::<i32>().unwrap_or(default_value)
 }
 
 const TOTAL_NUM_BOYS: f32 = 8258200.0;
