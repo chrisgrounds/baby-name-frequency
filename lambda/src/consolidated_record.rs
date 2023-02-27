@@ -19,6 +19,9 @@ fn convert_to_i32(s: &String, default_value: i32) -> i32 {
     };
 }
 
+const TOTAL_NUM_BOYS: f32 = 8258200.0;
+const TOTAL_NUM_GIRLS: f32 = 7660371.0;
+
 pub fn calculate(csv_data: &CsvData, gender: &str) -> ConsolidatedRecord {
     let total = [
         convert_to_i32(&csv_data.count2021, 0),
@@ -84,9 +87,9 @@ pub fn calculate(csv_data: &CsvData, gender: &str) -> ConsolidatedRecord {
     let total_rank: i32 = all_ranks.iter().sum();
 
     let all_counts = if gender == "boys" {
-        8258200.0
+        TOTAL_NUM_BOYS
     } else {
-        7660371.0
+        TOTAL_NUM_GIRLS
     };
 
     return ConsolidatedRecord {
