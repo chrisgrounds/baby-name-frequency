@@ -1,7 +1,7 @@
 // use lambda_http::Body;
 use serde::Serialize;
 
-use crate::csv_data::CsvData;
+use crate::{csv_data::CsvData, gender::Gender};
 
 #[derive(Debug, Serialize)]
 pub struct ConsolidatedRecord {
@@ -22,7 +22,7 @@ fn convert_to_i32(s: &String, default_value: i32) -> i32 {
 const TOTAL_NUM_BOYS: f32 = 8258200.0;
 const TOTAL_NUM_GIRLS: f32 = 7660371.0;
 
-pub fn calculate(csv_data: &CsvData, gender: &str) -> ConsolidatedRecord {
+pub fn calculate(csv_data: &CsvData, gender: &Gender) -> ConsolidatedRecord {
     let total = [
         convert_to_i32(&csv_data.count2021, 0),
         convert_to_i32(&csv_data.count2020, 0),
@@ -86,10 +86,10 @@ pub fn calculate(csv_data: &CsvData, gender: &str) -> ConsolidatedRecord {
 
     let total_rank: i32 = all_ranks.iter().sum();
 
-    let all_counts = if gender == "boys" {
-        TOTAL_NUM_BOYS
-    } else {
+    let all_counts = if gender.is_girl() {
         TOTAL_NUM_GIRLS
+    } else {
+        TOTAL_NUM_BOYS
     };
 
     return ConsolidatedRecord {
