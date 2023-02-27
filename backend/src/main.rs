@@ -2,12 +2,16 @@ use csv::Error;
 use std::time::Instant;
 
 use crate::consolidated_record::ConsolidatedRecord;
+use crate::gender::Gender;
 
 mod consolidated_record;
 mod csv_data;
+mod gender;
 
-fn run(name: String, gender: String) {
-    let file_path = format!("./data/{}_baby_names_1996_2021.csv", gender);
+fn run(name: String, gender_str: String) {
+    let gender = Gender::read_gender_or_default_to_girl(&gender_str);
+
+    let file_path = format!("./data/{}_baby_names_1996_2021.csv", gender.to_string());
     let rdr = csv::ReaderBuilder::new().from_path(file_path);
 
     match rdr {
@@ -24,7 +28,7 @@ fn run(name: String, gender: String) {
                         Err(e) => println!("{:?}", e),
                         Ok(csv_data) => {
                             let consolidated_record: ConsolidatedRecord =
-                                consolidated_record::calculate(&csv_data);
+                                consolidated_record::calculate(&csv_data, &gender);
                             println!("{:?}", consolidated_record);
                         }
                     }
@@ -37,5 +41,5 @@ fn run(name: String, gender: String) {
 }
 
 fn main() {
-    run(String::from("Auri"), String::from("girls"));
+    run(String::from("Auri"), String::from("girl"));
 }

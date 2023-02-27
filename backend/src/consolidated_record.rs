@@ -1,4 +1,4 @@
-use crate::csv_data::CsvData;
+use crate::{csv_data::CsvData, gender::Gender};
 
 #[derive(Debug)]
 pub struct ConsolidatedRecord {
@@ -6,16 +6,17 @@ pub struct ConsolidatedRecord {
     avg_rank: i32,
     total_count: i32,
     avg_count_year: f32,
+    total_count_as_percentage: f32,
 }
 
 fn convert_to_i32(s: &String, default_value: i32) -> i32 {
-    return match s.parse::<i32>() {
-        Err(_e) => default_value,
-        Ok(n) => n,
-    };
+    s.parse::<i32>().unwrap_or(default_value)
 }
 
-pub fn calculate(csv_data: &CsvData) -> ConsolidatedRecord {
+const TOTAL_NUM_BOYS: f32 = 8258200.0;
+const TOTAL_NUM_GIRLS: f32 = 7660371.0;
+
+pub fn calculate(csv_data: &CsvData, gender: &Gender) -> ConsolidatedRecord {
     let total = [
         convert_to_i32(&csv_data.count2021, 0),
         convert_to_i32(&csv_data.count2020, 0),
@@ -79,10 +80,17 @@ pub fn calculate(csv_data: &CsvData) -> ConsolidatedRecord {
 
     let total_rank: i32 = all_ranks.iter().sum();
 
+    let all_counts = if gender.is_girl() {
+        TOTAL_NUM_GIRLS
+    } else {
+        TOTAL_NUM_BOYS
+    };
+
     return ConsolidatedRecord {
         name: csv_data.name.clone(),
         avg_rank: total_rank / all_ranks.len() as i32,
         total_count: total,
         avg_count_year: total as f32 / 26.0,
+        total_count_as_percentage: (total as f32 / all_counts) * 100.0,
     };
 }
