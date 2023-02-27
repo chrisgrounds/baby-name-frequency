@@ -1,4 +1,5 @@
 use aws_sdk_s3;
+use lambda_http::http::StatusCode;
 use lambda_http::{run, service_fn, Body, Error, Request, RequestExt, Response};
 
 use crate::consolidated_record::ConsolidatedRecord;
@@ -8,6 +9,16 @@ mod consolidated_record;
 mod csv_data;
 mod gender;
 
+fn send_response(status_code: u16, json_data: String) -> Result<Response<Body>, Error> {
+    let resp: Response<Body> = Response::builder()
+        .status(StatusCode::from_u16(status_code).unwrap())
+        .header("content-type", "application/json")
+        .body(json_data.into())
+        .map_err(Box::new)?;
+
+    return Ok::<Response<Body>, Error>(resp);
+}
+
 async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
     let path_params = event.query_string_parameters();
     let name_param: Option<&str> = path_params.first("name");
@@ -15,7 +26,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
     let gender = Gender::read_gender(&path_params);
 
     match name_param {
-        None => Err("Missing query param 'name' or 'gender'".into()),
+        None => send_response(500, "{'error': 'Missing query param name'}".to_string()),
         Some(name) => {
             let config = aws_config::from_env().region("eu-west-1").load().await;
             let filename = &format!("{}_baby_names_1996_2021.csv", &gender.to_string());
@@ -47,13 +58,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
 
                         let json_data = serde_json::to_string(&consolidated_record)?;
 
-                        let resp: Response<Body> = Response::builder()
-                            .status(200)
-                            .header("content-type", "application/json")
-                            .body(json_data.into())
-                            .map_err(Box::new)?;
-
-                        return Ok::<Response<Body>, Error>(resp);
+                        return send_response(200, json_data.into());
                     };
                 };
             }
