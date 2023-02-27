@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      min-width: 100vw;
+      background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
+      background: url("background.jpg") no-repeat;
+      background-position: center;
+      background-size: cover;
+    }
+
+    h2 {
+      color: white;
+    }
+
+    .form-container {
+      position: relative;
+      /* make mobile friendly */
+      width: 400px;
+      /* make mobile friendly */
+      height: 400px;
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      backdrop-filter: blur(15px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+  <script>
+    function getData() {
+      // API: https://yny7e8wzge.execute-api.eu-west-1.amazonaws.com/?name=Auri&gender=girl
+      console.log("hello world");
+    }
+  </script>
+</head>
+
+<body>
+  <section>
+    <div class="form-container">
+      <form>
+        <h2>Baby name</h2>
+        <div>
+          <input type="text" />
+        </div>
+        <div>
+          <button type="button" onclick="getData()">Find</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</body>
+
+</html>
