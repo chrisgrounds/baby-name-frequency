@@ -1,5 +1,3 @@
-use lambda_http::aws_lambda_events::query_map::QueryMap;
-
 pub enum Gender {
     Girl,
     Boy,
