@@ -6,9 +6,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+
   <style>
+    * {
+      font-family: 'Open Sans', sans-serif;
+      box-sizing: border-box
+    }
+
     section {
-      /* TODO: Need better font */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,14 +31,15 @@
 
     h2 {
       color: white;
+      font-size: 2em;
+      text-align: center;
+
     }
 
     .form-container {
       position: relative;
-      /* TODO: make mobile friendly */
       width: 400px;
-      /* TODO: make mobile friendly */
-      height: 400px;
+      min-height: 400px;
       background: transparent;
       border: 2px solid rgba(255, 255, 255, 0.5);
       border-radius: 20px;
@@ -37,12 +47,159 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 40px;
+    }
+
+    @media screen and (max-width: 600px) {
+      .form-container {
+        width: 80%;
+        height: 80%;
+        padding: 10%;
+      }
+    }
+
+    form {
+      width: 100%;
+    }
+
+    .selectbox {
+      position: relative;
+      margin: 30px 0;
+      width: 100%;
+      border-bottom: 2px solid white;
+    }
+
+    .selectbox select {
+      width: 100%;
+      height: 50px;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 1em;
+      padding: 0 35px 0 5px;
+      color: white;
+    }
+
+    .selectbox label {
+      position: absolute;
+      left: 5px;
+      transform: translateY(-50%);
+      color: white;
+      font-size: 1em;
+      pointer-events: none;
+    }
+
+    input:focus~label,
+    input:focus~ :valid {
+      top: -5px;
+    }
+
+    .selectbox option {
+      color: black;
+    }
+
+    .inputbox {
+      position: relative;
+      margin: 30px 0;
+      width: 100%;
+      border-bottom: 2px solid white;
+    }
+
+    .inputbox label {
+      position: absolute;
+      top: 50%;
+      left: 5px;
+      transform: translateY(-50%);
+      color: white;
+      font-size: 1em;
+      pointer-events: none;
+      transition: .5s;
+    }
+
+    input:focus~label,
+    input:focus~ :valid {
+      top: -5px;
+    }
+
+    .inputbox input {
+      width: 100%;
+      height: 50px;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 1em;
+      padding: 0 35px 0 5px;
+      color: white;
+    }
+
+    button {
+      width: 100%;
+      height: 40px;
+      border-radius: 40px;
+      background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
+      background-size: 200% 200%;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 600;
+      animation: Animation 5s ease infinite;
+      color: white;
+    }
+
+    @keyframes Animation {
+      0% {
+        background-position: 10% 0%
+      }
+
+      50% {
+        background-position: 91% 100%
+      }
+
+      100% {
+        background-position: 10% 0%
+      }
+    }
+
+    .resultsbox {
+      display: none;
+      color: white;
+    }
+
+    .result {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      margin: 0 20px;
     }
   </style>
   <script>
     function getData() {
-      // TODO: API: https://yny7e8wzge.execute-api.eu-west-1.amazonaws.com/?name=Auri&gender=girl
-      console.log("hello world");
+      const babyName = document.getElementById("baby_name").value;
+      const gender = document.getElementById("gender").value;
+      const button = document.getElementById("button");
+      button.style.background = "grey";
+      button.innerHTML = "Loading...";
+      button.disabled = true;
+
+      if (babyName) {
+        fetch(`https://yny7e8wzge.execute-api.eu-west-1.amazonaws.com/?name=${babyName}&gender=${gender}`)
+          .then((data) => data.json())
+          .then(({ name, avg_rank, total_count, avg_count_year, total_count_as_percentage }) => {
+            button.style.background = "linear-gradient(90deg, #d53369 0%, #daae51 100%)";
+            button.innerHTML = "Find";
+            button.disabled = false;
+
+            const results = document.getElementById("results");
+            results.style.display = "block";
+
+            document.getElementById("name").innerHTML = `${name}`;
+            document.getElementById("avg_rank").innerHTML = `${avg_rank}`;
+            document.getElementById("total_count").innerHTML = `${total_count}`;
+            document.getElementById("avg_count_year").innerHTML = `${avg_count_year}`;
+            document.getElementById("total_count_as_percentage").innerHTML = `${total_count_as_percentage}`;
+          });
+      }
     }
   </script>
 </head>
@@ -53,10 +210,53 @@
       <form>
         <h2>Baby name</h2>
         <div>
-          <input type="text" />
-        </div>
-        <div>
-          <button type="button" onclick="getData()">Find</button>
+          <div class="inputbox">
+            <input id="baby_name" name="baby_name" type="text" />
+            <label for="">Name</label>
+          </div>
+
+          <div class="selectbox">
+            <select id="gender" name="gender">
+              <option value="girl">girl</option>
+              <option value="boy">boy</option>
+            </select>
+            <label for="">Gender</label>
+          </div>
+
+          <div>
+            <button id="button" type="button" onclick="getData()">Find</button>
+          </div>
+
+          <div id="results" class="resultsbox">
+            <h2>Results</h2>
+
+            <div>
+              <div class="result">
+                <label for="">Name</label>
+                <p id="name"></p>
+              </div>
+
+              <div class="result">
+                <label for="">Average Rank</label>
+                <p id="avg_rank"></p>
+              </div>
+
+              <div class="result">
+                <label for="">Total Count</label>
+                <p id="total_count"></p>
+              </div>
+
+              <div class="result">
+                <label for="">Average Count Per Year</label>
+                <p id="avg_count_year"></p>
+              </div>
+
+              <div class="result">
+                <label for="">Total Count as Percentage</label>
+                <p id="total_count_as_percentage"></p>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     </div>
