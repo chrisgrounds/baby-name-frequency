@@ -13,6 +13,7 @@ fn send_response(status_code: u16, json_data: String) -> Result<Response<Body>, 
     let resp: Response<Body> = Response::builder()
         .status(StatusCode::from_u16(status_code).unwrap())
         .header("content-type", "application/json")
+        .header("Access-Control-Allow-Origin", "*")
         .body(json_data.into())
         .map_err(Box::new)?;
 
