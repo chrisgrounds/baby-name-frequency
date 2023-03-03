@@ -198,11 +198,13 @@
             const results = document.getElementById("results");
             results.style.display = "block";
 
+            const roundedNumber = parseFloat(total_count_as_percentage).toFixed(5);
+
             document.getElementById("name").innerHTML = `${name}`;
             document.getElementById("avg_rank").innerHTML = `${avg_rank}`;
             document.getElementById("total_count").innerHTML = `${total_count}`;
             document.getElementById("avg_count_year").innerHTML = `${avg_count_year}`;
-            document.getElementById("total_count_as_percentage").innerHTML = `${total_count_as_percentage}`;
+            document.getElementById("total_count_as_percentage").innerHTML = `${roundedNumber}%`;
           });
       }
     }
