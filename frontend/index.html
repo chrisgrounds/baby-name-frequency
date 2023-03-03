@@ -48,6 +48,12 @@
       justify-content: center;
       align-items: center;
       padding: 40px;
+
+      /* cos safari is crap */
+      -webkit-backface-visibility: hidden;
+      -moz-backface-visibility: hidden;
+      -webkit-transform: translate3d(0, 0, 0);
+      -moz-transform: translate3d(0, 0, 0);
     }
 
     @media screen and (max-width: 600px) {
