@@ -205,6 +205,13 @@
             document.getElementById("total_count").innerHTML = `${total_count}`;
             document.getElementById("avg_count_year").innerHTML = `${avg_count_year}`;
             document.getElementById("total_count_as_percentage").innerHTML = `${roundedNumber}%`;
+          })
+          .catch((error) => {
+            console.log(error);
+
+            button.style.background = "linear-gradient(90deg, #d53369 0%, #daae51 100%)";
+            button.innerHTML = "Find";
+            button.disabled = false;
           });
       }
     }
