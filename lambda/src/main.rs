@@ -27,7 +27,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
     let gender = Gender::read_gender_or_default_to_girl(&path_params);
 
     match name_param {
-        None => send_response(500, "{'error': 'Missing query param name'}".to_string()),
+        None => send_response(500, "{'error': 'The query parameter \"name\" was missing, please try again.'}".to_string()),
         Some(name) => {
             let config = aws_config::from_env().region("eu-west-1").load().await;
             let filename = &format!("{}_baby_names_1996_2021.csv", &gender.to_string());
@@ -40,7 +40,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
                 .key(filename)
                 .send()
                 .await
-                .expect(&format!("Failed to get file {}", filename));
+                .expect(&format!("We failed to get file {}, please try again.", filename));
 
             let s3_result = data.body.collect().await.unwrap().into_bytes();
             let response = std::str::from_utf8(&s3_result).unwrap();
@@ -64,7 +64,7 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
                 };
             }
 
-            return send_response(500, "{'error': 'No records found'}".to_string());
+            return send_response(500, "{'error': 'No records found, please try again.'}".to_string());
         }
     }
 }
